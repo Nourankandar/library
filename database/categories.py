@@ -4,7 +4,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 import MySQLdb
-from .connect_DB import database
+from connect_DB import database
 import datetime
 class categories():
     def create_categories_table(self):
@@ -70,16 +70,12 @@ class categories():
             cursor = connect.cursor()
             
             if category_id is None:
-                # جلب الكل
                 sql = "SELECT id, name, created_at, updated_at FROM categories ORDER BY name"
                 cursor.execute(sql)
-                # استخدام fetchall() للحصول على قائمة بكل النتائج
                 result = cursor.fetchall()
             else:
-                # جلب واحد
                 sql = "SELECT id, name, created_at, updated_at FROM categories WHERE id = %s"
                 cursor.execute(sql, (category_id,))
-                # استخدام fetchone() للحصول على نتيجة واحدة فقط
                 result = cursor.fetchone() 
             
             return result
