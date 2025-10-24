@@ -1,7 +1,7 @@
 📚 MyLibrary App - نظام إدارة محتوى مكتبة متقدم / Advanced Library Content Management System
-English: MyLibrary App is an open-source desktop application designed for efficient management and organization of books and authors. The project aims to provide an advanced and structured Graphical User Interface (GUI) that adheres to a clear separation of logic and data layers.
+MyLibrary App is an open-source desktop application designed for efficient management and organization of books and authors. The project aims to provide an advanced and structured Graphical User Interface (GUI) that adheres to a clear separation of logic and data layers.
 
-العربية: تطبيق MyLibrary App هو نظام مكتبي مفتوح المصدر مصمم للإدارة والتنظيم الفعال لمجموعة الكتب والكتّاب. يهدف المشروع إلى توفير واجهة مستخدم رسومية (GUI) متقدمة ومنظمة تتبع مبدأ الفصل الواضح بين طبقات المنطق والبيانات.
+ا تطبيق MyLibrary App هو نظام مكتبي مفتوح المصدر مصمم للإدارة والتنظيم الفعال لمجموعة الكتب والكتّاب. يهدف المشروع إلى توفير واجهة مستخدم رسومية (GUI) متقدمة ومنظمة تتبع مبدأ الفصل الواضح بين طبقات المنطق والبيانات.
 
 ⚡ Advanced Features / ميزات متقدمة: Comprehensive search, state caching, and sophisticated Tkinter GUI design.
 
