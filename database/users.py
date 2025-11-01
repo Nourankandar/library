@@ -46,8 +46,8 @@ class Users():
             if count == 0:
                 default_hashed_pass = "$2b$12$EXAMPLE_HASH_FOR_ADMIN_12345" # استخدم تجزئة حقيقية
 
-                sql = "INSERT INTO users (full_name, email, password_hash, role, must_change_pass) VALUES (%s, %s, %s, %s, %s)"
-                values = ('Default Admin', 'admin@library.com', default_hashed_pass, 'admin', 1) # القيمة 1 تجعل التغيير إجبارياً
+                sql = "INSERT INTO users (full_name, email, password_hash, role, must_change_pass,is_verified) VALUES (%s, %s, %s, %s, %s,%s)"
+                values = ('Default Admin', 'admin@library.com', default_hashed_pass, 'admin', 1,1) # القيمة 1 تجعل التغيير إجبارياً
                 
                 connection.execute(sql, values)
                 print("Default Admin account created: admin@library.com. Change is mandatory.")

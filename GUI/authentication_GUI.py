@@ -11,6 +11,7 @@ sys.path.insert(0, parent_dir)
 
 # =========================================================
 from logic.authentication_logic import Register_Button, LogIn_Button
+from logic.verification_logic import verify_user_code
 
 def GUI(name):
     frame=Tk()
@@ -67,7 +68,7 @@ def handle_register(full_name_var, email_var, password_var,parent_frame):
     success = Register_Button(full_name_var, email_var, password_var)
     if success: 
         parent_frame.destroy()
-        open_verification_window()
+        open_verification_window(email_var)
     else:
         pass
     
@@ -89,16 +90,20 @@ def register_Button(register_frame,full_name_var, email_var, password_var,parent
 
 def handle_login(email_var, password_var, login_frame):
     try:
-        success, user_data = LogIn_Button(email_var, password_var)
+        success, user_data,verify_status = LogIn_Button(email_var, password_var)
         if success:
-            messagebox.showinfo("نجاح", f"تم تسجيل الدخول بنجاح! ")
-            login_frame.destroy()
-            Home(user_data)
+            if verify_status == 0:
+                login_frame.destroy()
+                open_verification_window(email_var)
+                
+            elif verify_status == 1:
+                login_frame.destroy()
+                Home(user_data)
     except Exception as e:
         messagebox.showerror("Error", "An error occurred during login.")
         print(f"Login error: {e}")
 
-def logIn_Button(logIn_frame,email_var, password_var):
+def logIn_Button(logIn_frame,frame,email_var, password_var):
     style = ttk.Style()
     style.configure(
     'Rounded.TButton',
@@ -111,7 +116,7 @@ def logIn_Button(logIn_frame,email_var, password_var):
     darkcolor='#1E90FF',
     padding=7
     )
-    button=ttk.Button(logIn_frame,text='Log In',style='Rounded.TButton',command=lambda: handle_login(email_var, password_var, logIn_frame))
+    button=ttk.Button(logIn_frame,text='Log In',style='Rounded.TButton',command=lambda: handle_login(email_var, password_var, frame))
     button.place(x=170,y=250)
 
 def switch_to_login(current_frame):
@@ -150,13 +155,30 @@ def Register():
 def Log_in():
     frame,logIn_frame=GUI('Log In')
     email_var, password_var = logIn_labels(logIn_frame)
-    logIn_Button(logIn_frame,email_var,password_var)
+    logIn_Button(logIn_frame,frame,email_var,password_var)
     sign_up_Button(logIn_frame,frame)
     create_clickable_label(frame,"Forget Password ?",200,520)
     frame.mainloop()
-def hendle_verify():
-    pass  
-def open_verification_window():
+
+def handle_verify(email, code_var, verification_frame):
+    code = code_var.get()
+    # print(email)
+    print(code )
+    print(code_var)
+    if not code:
+        messagebox.showerror("خطأ", "الرجاء إدخال كود التحقق.")
+
+    result = verify_user_code(email, code, 'registration')
+    if result is None:
+        messagebox.showerror("خطأ", "فشل التحقق. لم يتم العثور على بيانات المستخدم.")
+    elif result is True:
+        messagebox.showinfo("نجاح", "تم تفعيل حسابك بنجاح! يمكنك الآن تسجيل الدخول.")
+        verification_frame.destroy()
+        Log_in() 
+    elif result is False:
+        messagebox.showerror("خطأ", "كود التحقق غير صحيح أو انتهت صلاحيته.")
+
+def open_verification_window(email_var):
     frame=Tk()
     frame['bg'] = 'lightblue'
     frame.geometry("400x400+500+200")
@@ -166,8 +188,8 @@ def open_verification_window():
     code = StringVar()
     general_lable(inner_frame,"Enter The code:",40,40)    
     general_entry(inner_frame,code,40,90)
-    general_button(inner_frame,'Verify',90,140,"",40,200,command_func=lambda: switch_to_register(frame))
-    general_button(inner_frame,'close',90,190,"",40,200,command_func=lambda: switch_to_register(frame))
+    general_button(inner_frame,'Verify',90,140,"",40,200,command_func=lambda: handle_verify(email_var,code,frame))
+    general_button(inner_frame,'close',150,140,"",40,200,command_func=lambda: switch_to_register(frame))
 
     create_clickable_label(inner_frame,"didnt recive ? resend again",80,190)
     frame.mainloop()

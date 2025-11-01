@@ -1,3 +1,4 @@
+import re
 import sys
 import os
 current_dir = os.path.dirname(os.path.abspath(__file__)) 
@@ -81,18 +82,24 @@ def LogIn_Button(email, password):
                 if success_prep is None:
                     messagebox.showerror("server error", "  ")
                     db.delete_user(email)
-                    return False
+                    return False ,None ,0
                 sent=service1.send_verification_email(email, message_prep)
                 if sent is None:
                     messagebox.showerror("خطأ في الإرسال", "فشل إرسال بريد التحقق. يرجى المحاولة لاحقاً.")
                     db.delete_user(email)
-                    return False
+                    return False,None,0
+                if sent :
+                    return True,user,0
+                
+            else:
                 messagebox.showinfo("نجاح", "تم التسجيل بنجاح. يرجى التحقق من بريدك الإلكتروني.")
-                return True 
+                save_session(user_id,role)
+                return True ,user,1
 
             if must_change_pass == 1:
-                 messagebox.showwarning("تغيير إجباري", "يجب عليك تغيير كلمة المرور الافتراضية الآن.")
-                 return True, user
+                messagebox.showwarning("تغيير إجباري", "يجب عليك تغيير كلمة المرور الافتراضية الآن.")
+                return True, user,1
+            
             save_session(user_id,role)
             return True, user
         else:
