@@ -8,10 +8,9 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__)) 
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
-
-# =========================================================
 from logic.authentication_logic import Register_Button, LogIn_Button
 from logic.verification_logic import verify_user_code
+from logic.reset_password import request_password_reset_logic,reset_password_logic
 
 def GUI(name):
     frame=Tk()
@@ -132,7 +131,7 @@ def sign_in_Button(register_frame,frame):
 def sign_up_Button(register_frame,frame):
     general_button(register_frame,'Sign Up',290,340,"Don't have an account?:",100,350,command_func=lambda: switch_to_register(frame))
 
-def create_clickable_label(parent_frame,name,x,y):
+def create_clickable_label(parent_frame,name,x,y,command):
     clickable_label = Label(
         parent_frame,
         text=name,
@@ -141,7 +140,7 @@ def create_clickable_label(parent_frame,name,x,y):
         font =('Times New Roman',12)
     )
     clickable_label.place(x=x,y=y)
-    clickable_label.bind("<Button-1>")
+    clickable_label.bind("<Button-1>", command)
     clickable_label.bind("<Enter>", lambda event: clickable_label.config(fg="red"))
     clickable_label.bind("<Leave>", lambda event: clickable_label.config(fg="blue")) 
 
@@ -162,9 +161,6 @@ def Log_in():
 
 def handle_verify(email, code_var, verification_frame):
     code = code_var.get()
-    # print(email)
-    print(code )
-    print(code_var)
     if not code:
         messagebox.showerror("خطأ", "الرجاء إدخال كود التحقق.")
 
@@ -189,13 +185,83 @@ def open_verification_window(email_var):
     general_lable(inner_frame,"Enter The code:",40,40)    
     general_entry(inner_frame,code,40,90)
     general_button(inner_frame,'Verify',90,140,"",40,200,command_func=lambda: handle_verify(email_var,code,frame))
+
     general_button(inner_frame,'close',150,140,"",40,200,command_func=lambda: switch_to_register(frame))
 
-    create_clickable_label(inner_frame,"didnt recive ? resend again",80,190)
+    create_clickable_label(inner_frame,"didnt recive ? resend again",80,190 ,command_func=lambda e: [frame.destroy(), Forget_Password_GUI()])
     frame.mainloop()
     
+#-----------------------FORGET PASSWORD --------------------------
 
+def Forget_Password_GUI():
+    """واجهة لطلب البريد الإلكتروني لبدء عملية إعادة التعيين."""
+    frame, inner_frame = GUI("Forget Password")
+    
+    email_var = StringVar()
+    
+    general_lable(inner_frame, "Enter Your Email:", 40, 40)
+    general_entry(inner_frame, email_var, 40, 90)
 
+    def handle_request():
+        email = email_var.get().strip()
+        if not email:
+            messagebox.showerror("خطأ", "الرجاء إدخال البريد الإلكتروني.")
+            return
 
+        # استدعاء منطق طلب إعادة التعيين (سيُضاف في الخطوة 2)
+        success, message = request_password_reset_logic(email)
+        
+        if success:
+            messagebox.showinfo("نجاح", "تم إرسال كود التحقق إلى بريدك الإلكتروني.")
+            frame.destroy()
+            Reset_Password_GUI(email_var)  
+        else:
+            messagebox.showerror("خطأ", message)
+
+    request_button = Button(inner_frame, text="Request Reset Code", 
+                            font=('Times New Roman', 18), bg='darkblue', fg='white',
+                            command=handle_request)
+    request_button.place(x=40, y=140)
+    
+    frame.mainloop()
+
+def Reset_Password_GUI(email_var):
+    """واجهة لإدخال كود التحقق وكلمة المرور الجديدة."""
+    email = email_var.get().strip()
+    frame, inner_frame = GUI("Reset Password")
+    
+    code_var = StringVar()
+    new_password_var = StringVar()
+    
+    general_lable(inner_frame, "Verification Code:", 40, 40)
+    general_entry(inner_frame, code_var, 40, 90)
+
+    general_lable(inner_frame, "New Password:", 40, 140)
+    general_entry(inner_frame, new_password_var, 40, 190)
+
+    def handle_reset():
+        code = code_var.get().strip()
+        new_password = new_password_var.get()
+        
+        if not all([code, new_password]):
+            messagebox.showerror("خطأ", "الرجاء ملء جميع الحقول.")
+            return
+            
+        # استدعاء منطق إعادة التعيين (سيُضاف في الخطوة 2)
+        success, message = reset_password_logic(email, code, new_password)
+        
+        if success:
+            messagebox.showinfo("نجاح", "تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.")
+            frame.destroy()
+            Log_in() # العودة إلى شاشة تسجيل الدخول
+        else:
+            messagebox.showerror("خطأ", message)
+
+    reset_button = Button(inner_frame, text="Reset Password", 
+                          font=('Times New Roman', 18), bg='darkred', fg='white',
+                          command=handle_reset)
+    reset_button.place(x=40, y=240)
+    
+    frame.mainloop()
 
 

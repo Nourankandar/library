@@ -8,9 +8,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 def verify_user_code(email, code, purpose):
-    print(" emaillll")
-    print(email.get() )
-    print(" emaillll")
+
     db = Users()
     verify=verification()
     user = db.get_user_login(email.get())

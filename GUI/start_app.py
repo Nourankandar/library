@@ -12,13 +12,13 @@ from database import authors,books,categories,users,verification
 from logic.session import load_session
 from main_GUI import Home
 from authentication_GUI import Log_in
-IMAGE_PATH = 'static/start_image/splash_image.png' 
+IMAGE_PATH = 'static/start_image/image.png' 
 SPLASH_DURATION_MS = 1000
 class public_Create_tables():
     def __init__(self):
-        users.Users()
-        verification.verification()
-        categories.categories()
+        users.Create_User()
+        verification.Create_Verification()
+        categories.Create_Gategories()
     
     def GUI(self,name):
         frame=Tk()

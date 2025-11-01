@@ -15,8 +15,7 @@ def is_valid_email(email):
     if re.fullmatch(regex, email):
         return True
     return False
-class Users():
-
+class Create_User():
     def __init__(self):
         print("hello")
         self.create_user_table()
@@ -44,10 +43,10 @@ class Users():
             connection.execute("SELECT COUNT(*) FROM users WHERE email = %s", ('admin@library.com',))
             count = connection.fetchone()[0]
             if count == 0:
-                default_hashed_pass = "$2b$12$EXAMPLE_HASH_FOR_ADMIN_12345" # استخدم تجزئة حقيقية
+                default_hashed_pass = "$2b$12$EXAMPLE_HASH_FOR_ADMIN_12345"
 
                 sql = "INSERT INTO users (full_name, email, password_hash, role, must_change_pass,is_verified) VALUES (%s, %s, %s, %s, %s,%s)"
-                values = ('Default Admin', 'admin@library.com', default_hashed_pass, 'admin', 1,1) # القيمة 1 تجعل التغيير إجبارياً
+                values = ('Default Admin', 'admin@library.com', default_hashed_pass, 'admin', 1,1) 
                 
                 connection.execute(sql, values)
                 print("Default Admin account created: admin@library.com. Change is mandatory.")
@@ -57,7 +56,8 @@ class Users():
             print(f"Error creating table: {e}")
         finally:
             connect.close()
-    
+  
+class Users():
 
     def insert_user(self,full_name,email,password_hash):
         

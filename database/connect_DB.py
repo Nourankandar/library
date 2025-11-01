@@ -13,5 +13,4 @@ class database():
         passwd="nourankandar",
         db="my-data"
         )
-        print("connected")
         return connection

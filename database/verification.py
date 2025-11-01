@@ -6,7 +6,7 @@ sys.path.insert(0, parent_dir)
 import MySQLdb
 from .connect_DB import database
 
-class verification():
+class Create_Verification():
     def create_verify_table(self):
         connect = database().connect()
         if connect is None:
@@ -32,7 +32,7 @@ class verification():
             connect.close()
     def __init__(self):
         self.create_verify_table()
-
+class verification():
     def save_verification_code(self, user_id, code, purpose, expires_at):
         connect = database().connect()
         if connect is None: return False
