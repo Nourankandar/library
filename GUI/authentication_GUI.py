@@ -2,11 +2,13 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import bcrypt
+from main_GUI import Home
 import sys
 import os
 current_dir = os.path.dirname(os.path.abspath(__file__)) 
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
+
 # =========================================================
 from logic.authentication_logic import Register_Button, LogIn_Button
 
@@ -84,6 +86,18 @@ def register_Button(register_frame,full_name_var, email_var, password_var,parent
     )
     button=ttk.Button(register_frame,text='Register',style='Rounded.TButton',command=lambda: handle_register(full_name_var, email_var, password_var,parent_frame))
     button.place(x=170,y=320)
+
+def handle_login(email_var, password_var, login_frame):
+    try:
+        success, user_data = LogIn_Button(email_var, password_var)
+        if success:
+            messagebox.showinfo("نجاح", f"تم تسجيل الدخول بنجاح! ")
+            login_frame.destroy()
+            Home(user_data)
+    except Exception as e:
+        messagebox.showerror("Error", "An error occurred during login.")
+        print(f"Login error: {e}")
+
 def logIn_Button(logIn_frame,email_var, password_var):
     style = ttk.Style()
     style.configure(
@@ -97,7 +111,7 @@ def logIn_Button(logIn_frame,email_var, password_var):
     darkcolor='#1E90FF',
     padding=7
     )
-    button=ttk.Button(logIn_frame,text='Log In',style='Rounded.TButton',command=lambda: LogIn_Button(email_var, password_var))
+    button=ttk.Button(logIn_frame,text='Log In',style='Rounded.TButton',command=lambda: handle_login(email_var, password_var, logIn_frame))
     button.place(x=170,y=250)
 
 def switch_to_login(current_frame):
@@ -140,7 +154,8 @@ def Log_in():
     sign_up_Button(logIn_frame,frame)
     create_clickable_label(frame,"Forget Password ?",200,520)
     frame.mainloop()
-    
+def hendle_verify():
+    pass  
 def open_verification_window():
     frame=Tk()
     frame['bg'] = 'lightblue'
@@ -152,11 +167,13 @@ def open_verification_window():
     general_lable(inner_frame,"Enter The code:",40,40)    
     general_entry(inner_frame,code,40,90)
     general_button(inner_frame,'Verify',90,140,"",40,200,command_func=lambda: switch_to_register(frame))
+    general_button(inner_frame,'close',90,190,"",40,200,command_func=lambda: switch_to_register(frame))
+
     create_clickable_label(inner_frame,"didnt recive ? resend again",80,190)
     frame.mainloop()
     
 
-Register()
+
 
 
 

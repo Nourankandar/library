@@ -5,7 +5,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 import datetime
 import MySQLdb
-from connect_DB import database
+from .connect_DB import database
 
 class authors():
     def create_authors_table(self):

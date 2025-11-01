@@ -18,8 +18,8 @@ class categories():
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100) NOT NULL,
                     description TEXT,
-                    created_at DATETIME NOT NULL,
-                    updated_at DATETIME
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )
             """)
             connect.commit()

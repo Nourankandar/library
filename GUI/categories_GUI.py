@@ -5,7 +5,6 @@ from tkinter import messagebox
 import sys
 import os
 
-from shiboken6 import delete
 current_dir = os.path.dirname(os.path.abspath(__file__)) 
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
@@ -81,7 +80,7 @@ class categories():
             frame.destroy()
             self.categories(LO_categories().get_all_categories())
 
-    def create_category_card(self,parent_frame, category_data,main_window):
+    def create_category_card(self,parent_frame, category_data,main_window,user_role):
         CARD_WIDTH = 450  
         CARD_HEIGHT = 50
         card = Frame(parent_frame, bg='#F0F0F0',  bd=1, relief=GROOVE, width=CARD_WIDTH, height=CARD_HEIGHT)
@@ -94,8 +93,9 @@ class categories():
         title_label.bind("<Button-1>",lambda e:open_category())
         title_label.bind("<Enter>", lambda event: title_label.config(fg="red"))
         title_label.bind("<Leave>", lambda event: title_label.config(fg="black")) 
-        self.general_button(card,"Edit",280,4,command_func=lambda:self.edit_category(category_data,main_window))
-        self.general_button(card,"Delete",350,4,command_func=lambda:self.delete_category_handler(category_data['id'],card,main_window))
+        if user_role == "admin":
+            self.general_button(card,"Edit",280,4,command_func=lambda:self.edit_category(category_data,main_window))
+            self.general_button(card,"Delete",350,4,command_func=lambda:self.delete_category_handler(category_data['id'],card,main_window))
         return card
     
     def delete_category_handler(self, category_id, card_frame, main_frame):
@@ -119,7 +119,7 @@ class categories():
     def edit_category(self,category_data,main_window):
         self._category(main_window,"Edit Category",f"Edit Category: {category_data['name']}","Update Category","update",category_data['id'])
 
-    def categories(self,sample_categories=None):
+    def categories(self,sample_categories=None,user_role='guest'):
         print(self._main_categories_frame,"checking existing frame")
         if categories._main_categories_frame and categories._main_categories_frame.winfo_exists():
             categories._main_categories_frame.lift() 
@@ -147,11 +147,12 @@ class categories():
 
             scrollable_canvas.bind('<Configure>', on_canvas_configure)        
             for index, category in enumerate(sample_categories):
-                card = self.create_category_card(categories_frame, category,main_frame) 
+                card = self.create_category_card(categories_frame, category,main_frame,user_role) 
                 card.pack(pady=5, padx=30, anchor='w')
-                
-            self.general_button(main_frame,"Add Category",370,520,command_func=lambda:self._category(main_frame,"add category","Add category","Add Category","add"))
             self.general_button(main_frame,"back",200,520,command_func=lambda:main_frame.destroy())
+            if user_role == 'admin':
+                self.general_button(main_frame,"Add Category",370,520,command_func=lambda:self._category(main_frame,"add category","Add category","Add Category","add"))
+            
         main_frame.mainloop()
         return main_frame
     

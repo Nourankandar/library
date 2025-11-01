@@ -8,6 +8,7 @@ from tkinter import messagebox
 import bcrypt
 from database.users import Users
 from service.email_service import service
+from .session import save_session
 def Register_Button(full_name, email, password):
     
     full_name = full_name.get().strip()
@@ -59,16 +60,41 @@ def LogIn_Button(email, password):
     email = email.get().strip()
     password = password.get()
     db=Users()
+    service1=service()
     user=db.get_user_login(email)
     if not user:
         messagebox.showerror("Error","you are not registerd" )
-        return
+        return False
     hashed_password_from_db = user[2].encode('utf-8')
     password_entered = password.encode('utf-8')
     
     try:
         if bcrypt.checkpw(password_entered, hashed_password_from_db):
-            messagebox.showinfo("Success", "Logged in successfully!")
+            user_id = user[0]
+            role = user[3]
+            must_change_pass = user[5]
+            is_verified = user[4]
+            
+            if is_verified == 0:
+                messagebox.showerror("خطأ", "الرجاء تفعيل حسابك من خلال البريد الإلكتروني أولاً.")
+                success_prep,user_id, message_prep = service1.create_code_verification(email, 'registration')
+                if success_prep is None:
+                    messagebox.showerror("server error", "  ")
+                    db.delete_user(email)
+                    return False
+                sent=service1.send_verification_email(email, message_prep)
+                if sent is None:
+                    messagebox.showerror("خطأ في الإرسال", "فشل إرسال بريد التحقق. يرجى المحاولة لاحقاً.")
+                    db.delete_user(email)
+                    return False
+                messagebox.showinfo("نجاح", "تم التسجيل بنجاح. يرجى التحقق من بريدك الإلكتروني.")
+                return True 
+
+            if must_change_pass == 1:
+                 messagebox.showwarning("تغيير إجباري", "يجب عليك تغيير كلمة المرور الافتراضية الآن.")
+                 return True, user
+            save_session(user_id,role)
+            return True, user
         else:
             messagebox.showerror("Error", "Incorrect password.")
     except Exception as e:

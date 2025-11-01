@@ -99,4 +99,3 @@ class verification():
             return False
         finally:
             connect.close()
-verification()

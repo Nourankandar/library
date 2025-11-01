@@ -8,6 +8,8 @@ sys.path.insert(0, parent_dir)
 from categories_GUI import categories
 from logic.category_logic import LO_categories
 sample_categories=categories().sample_categories
+current_user_role = 'guest' 
+current_user_id = None
 def GUI(name):
     frame=Tk()
     frame['bg'] = 'lightblue'
@@ -46,21 +48,19 @@ def navbar(main_window):
     general_lable(navbar_frame,"Search:")    
 
 def open_category():
-    save_frame=categories().categories(LO_categories().get_all_categories())
+    global current_user_role
+    categories().categories(LO_categories().get_all_categories(), current_user_role)
     
     
-def Home():
-    latest_books = [
-            {'title': 'مقدمة في الفيزياء', 'author': 'أحمد علي', 'category': 'علمي', 'type': 'Scientific Book'},
-            {'title': 'رواية مدينة الرياح', 'author': 'سارة محمد', 'category': 'أدب', 'type': 'Novel'},
-            {'title': 'فلسفة العقل الحديث', 'author': 'خالد ناصر', 'category': 'فلسفة', 'type': 'Article'},
-            {'title': 'مقدمة في الفيزياء', 'author': 'أحمد علي', 'category': 'علمي', 'type': 'Scientific Book'},
-            {'title': 'رواية مدينة الرياح', 'author': 'سارة محمد', 'category': 'أدب', 'type': 'Novel'},
-            {'title': 'فلسفة العقل الحديث', 'author': 'خالد ناصر', 'category': 'فلسفة', 'type': 'Article'},
-        ]
+def Home(user_data=None):
+    global current_user_role, current_user_id
+    
+    if user_data:
+        current_user_role = user_data[1] 
+        current_user_id = user_data[0]
+        print(f"Logged in as: {current_user_role}")
     main_window,frame=GUI('Our Books')
-    navbar_= navbar(main_window)
-    
+    navbar(main_window)
     main_window.mainloop()
 
-Home()
+# Home()

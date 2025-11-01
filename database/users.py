@@ -17,6 +17,11 @@ def is_valid_email(email):
     return False
 class Users():
 
+    def __init__(self):
+        print("hello")
+        self.create_user_table()
+        
+
     def create_user_table(self):
         connect = database().connect()
         if connect is None:
@@ -30,10 +35,10 @@ class Users():
                     email VARCHAR(100) UNIQUE,
                     password_hash VARCHAR(255),
                     role VARCHAR(50) DEFAULT 'user',
-                    must_change_pass BOOLEAN DEFAULT 0
-                    is_verified BOOLEAN DEFAULT 0
-                    created_at DATETIME NOT NULL,
-                    updated_at DATETIME
+                    must_change_pass BOOLEAN DEFAULT 0,
+                    is_verified BOOLEAN DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )
             """)
             connection.execute("SELECT COUNT(*) FROM users WHERE email = %s", ('admin@library.com',))
@@ -52,8 +57,7 @@ class Users():
             print(f"Error creating table: {e}")
         finally:
             connect.close()
-    def __init__(self):
-        self.create_user_table()
+    
 
     def insert_user(self,full_name,email,password_hash):
         
@@ -177,7 +181,7 @@ class Users():
         if connect is None: return None
         try:
             cursor = connect.cursor()
-            sql = "SELECT id,email, password_hash FROM users WHERE email = %s"
+            sql = "SELECT id,email, password_hash, role,is_verified,must_change_pass FROM users WHERE email = %s"
             cursor.execute(sql, (email,))
             user_data = cursor.fetchone()
             return user_data
