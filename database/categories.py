@@ -6,7 +6,7 @@ sys.path.insert(0, parent_dir)
 import MySQLdb
 from .connect_DB import database
 import datetime
-class categories():
+class Create_Gategories():
     def create_categories_table(self):
         connect = database().connect()
         if connect is None:
@@ -32,6 +32,8 @@ class categories():
     def __init__(self):
         self.create_categories_table()
 
+class categories():
+    
     def add_category(self, name, description):
         """يضيف تصنيفاً جديداً."""
         name = name.strip()
