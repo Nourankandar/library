@@ -99,3 +99,19 @@ class verification():
             return False
         finally:
             connect.close()
+    
+    def delete_code(self,user_id):
+        connect = database().connect()
+        if connect is None: return False
+        try:
+            cursor = connect.cursor()
+            cursor.execute("DELETE FROM verification_codes WHERE user_id = %s AND purpose = %s", (user_id))
+            
+            connect.commit()
+            print(f"User {user_id}  code deleted ")
+            return True
+        except Exception as e:
+            print(f"Error activating user/deleting code: {e}")
+            return False
+        finally:
+            connect.close()

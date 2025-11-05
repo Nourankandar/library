@@ -6,7 +6,7 @@ sys.path.insert(0, parent_dir)
 import MySQLdb
 import re
 from .connect_DB import database
-
+import bcrypt
 def is_valid_email(email):
     """
     يتحقق من أن البريد الإلكتروني يطابق التنسيق القياسي.
@@ -43,7 +43,11 @@ class Create_User():
             connection.execute("SELECT COUNT(*) FROM users WHERE email = %s", ('admin@library.com',))
             count = connection.fetchone()[0]
             if count == 0:
-                default_hashed_pass = "$2b$12$EXAMPLE_HASH_FOR_ADMIN_12345"
+                password ="Admin@123"
+                salt = bcrypt.gensalt()
+                hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+                default_hashed_pass = hashed_password.decode('utf-8')
+                # default_hashed_pass = "$2b$12$EXAMPLE_HASH_FOR_ADMIN_12345"
 
                 sql = "INSERT INTO users (full_name, email, password_hash, role, must_change_pass,is_verified) VALUES (%s, %s, %s, %s, %s,%s)"
                 values = ('Default Admin', 'admin@library.com', default_hashed_pass, 'admin', 1,1) 

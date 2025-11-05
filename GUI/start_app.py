@@ -35,8 +35,9 @@ class public_Create_tables():
         user_data=[user_id,user_role]
         if user_id is None:
             user_id, user_role = load_session() 
-        
+        user_data=[user_id,user_role]
         if user_id and user_role:
+            print(user_data)
             print(f"Session found for user ID: {user_id}. Role: {user_role}. Starting Home.")
             Home(user_data) 
         else:

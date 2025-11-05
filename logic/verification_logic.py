@@ -24,9 +24,10 @@ def verify_user_code(email, code, purpose):
 
     retrieved_code, expires_at = code_data
     if expires_at < datetime.datetime.now():
-        verify.activate_user_and_delete_code(user_id, purpose)
+        verify.delete_code(user_id) 
         print("3")
         return False
+    
     if code == retrieved_code:
         success = verify.activate_user_and_delete_code(user_id, purpose)
         if success:

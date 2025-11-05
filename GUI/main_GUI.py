@@ -7,7 +7,11 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 from categories_GUI import categories
 from logic.category_logic import LO_categories
-sample_categories=categories().sample_categories
+from authors_GUI import authors_Class
+# sample_categories=categories().sample_categories
+list_of_authers= authors_Class().list_of_authers
+current_user_role=" "
+current_user_id=0
 current_user_role = 'guest' 
 current_user_id = None
 def GUI(name):
@@ -42,19 +46,26 @@ def navbar(main_window):
 
     home_button = navbar_buttons(navbar_frame,"Home",lambda: switch_content("Home"))
     categories_button = navbar_buttons(navbar_frame,"Categories",lambda:open_category())
-    authors_button = navbar_buttons(navbar_frame,"Authors",lambda: switch_content("Authors"))
+    authors_button = navbar_buttons(navbar_frame,"Authors",lambda: open_authors())
     titles_button= navbar_buttons(navbar_frame,"Titles",lambda: switch_content("Titles"))
     general_entry(navbar_frame,search_key)
     general_lable(navbar_frame,"Search:")    
 
 def open_category():
-    global current_user_role
+    # global current_user_role
+    print(current_user_role)
     categories().categories(LO_categories().get_all_categories(), current_user_role)
     
-    
-def Home(user_data=None):
-    global current_user_role, current_user_id
-    
+def open_authors():
+    # global current_user_role
+    authors_Class().authors_gui(list_of_authers,current_user_role)
+
+
+
+def Home(user_data):
+    global current_user_role 
+    global current_user_id
+    print(user_data)
     if user_data:
         current_user_role = user_data[1] 
         current_user_id = user_data[0]

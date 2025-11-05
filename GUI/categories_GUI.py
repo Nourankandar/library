@@ -120,6 +120,7 @@ class categories():
         self._category(main_window,"Edit Category",f"Edit Category: {category_data['name']}","Update Category","update",category_data['id'])
 
     def categories(self,sample_categories=None,user_role='guest'):
+
         print(self._main_categories_frame,"checking existing frame")
         if categories._main_categories_frame and categories._main_categories_frame.winfo_exists():
             categories._main_categories_frame.lift() 
@@ -150,6 +151,7 @@ class categories():
                 card = self.create_category_card(categories_frame, category,main_frame,user_role) 
                 card.pack(pady=5, padx=30, anchor='w')
             self.general_button(main_frame,"back",200,520,command_func=lambda:main_frame.destroy())
+            print(user_role)
             if user_role == 'admin':
                 self.general_button(main_frame,"Add Category",370,520,command_func=lambda:self._category(main_frame,"add category","Add category","Add Category","add"))
             

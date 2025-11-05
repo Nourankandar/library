@@ -156,8 +156,9 @@ def Log_in():
     email_var, password_var = logIn_labels(logIn_frame)
     logIn_Button(logIn_frame,frame,email_var,password_var)
     sign_up_Button(logIn_frame,frame)
-    create_clickable_label(frame,"Forget Password ?",200,520)
+    create_clickable_label(frame,"Forget Password ?",200,520,command=Forget_Password_GUI)
     frame.mainloop()
+
 
 def handle_verify(email, code_var, verification_frame):
     code = code_var.get()
@@ -173,6 +174,9 @@ def handle_verify(email, code_var, verification_frame):
         Log_in() 
     elif result is False:
         messagebox.showerror("خطأ", "كود التحقق غير صحيح أو انتهت صلاحيته.")
+def resend_code(frame):
+    [frame.destroy(), Forget_Password_GUI()]
+
 
 def open_verification_window(email_var):
     frame=Tk()
@@ -188,7 +192,7 @@ def open_verification_window(email_var):
 
     general_button(inner_frame,'close',150,140,"",40,200,command_func=lambda: switch_to_register(frame))
 
-    create_clickable_label(inner_frame,"didnt recive ? resend again",80,190 ,command_func=lambda e: [frame.destroy(), Forget_Password_GUI()])
+    create_clickable_label(inner_frame,"didnt recive ? resend again",80,190 ,command_func=lambda e:resend_code )
     frame.mainloop()
     
 #-----------------------FORGET PASSWORD --------------------------
@@ -247,13 +251,12 @@ def Reset_Password_GUI(email_var):
             messagebox.showerror("خطأ", "الرجاء ملء جميع الحقول.")
             return
             
-        # استدعاء منطق إعادة التعيين (سيُضاف في الخطوة 2)
         success, message = reset_password_logic(email, code, new_password)
         
         if success:
             messagebox.showinfo("نجاح", "تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.")
             frame.destroy()
-            Log_in() # العودة إلى شاشة تسجيل الدخول
+            Log_in()
         else:
             messagebox.showerror("خطأ", message)
 
